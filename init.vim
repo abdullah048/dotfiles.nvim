@@ -580,6 +580,8 @@ lspsaga.setup { -- defaults ...
 
 EOF
 set completeopt=menuone,noinsert,noselect
+nnoremap <silent> gh <Cmd>Lspsaga lsp_finder<CR>
+nnoremap <silent> gp <Cmd>Lspsaga preview_definition<CR>
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
 inoremap <silent><expr> <C-Space> compe#complete()
