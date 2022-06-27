@@ -1,5 +1,4 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
-" below are some vim plugins for demonstration purpose.
 "add the plugin you want to use here.
 Plug 'tami5/lspsaga.nvim'
 Plug 'williamboman/nvim-lsp-installer'
