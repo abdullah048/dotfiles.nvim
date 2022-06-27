@@ -1,7 +1,14 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
 " below are some vim plugins for demonstration purpose.
 "add the plugin you want to use here.
-
+Plug 'tami5/lspsaga.nvim'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'hrsh7th/nvim-compe'
+Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'L3MON4D3/LuaSnip'
+Plug 'onsails/lspkind-nvim'
+Plug 'folke/lsp-colors.nvim'
+Plug 'kabouzeid/nvim-lspinstall'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'hoob3rt/lualine.nvim'
@@ -12,11 +19,9 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'p00f/nvim-ts-rainbow'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'nvim-treesitter/nvim-treesitter', {'do': 'TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'jiangmiao/auto-pairs'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'   
 Plug 'kristijanhusak/defx-icons'
 Plug 'ap/vim-css-color'
@@ -25,13 +30,14 @@ Plug 'joshdick/onedark.vim'
 Plug 'iCyMind/NeoSolarized'
 Plug 'tribela/vim-transparent'
 Plug 'frazrepo/vim-rainbow'
-Plug 'preservim/nerdtree'
-Plug 'hrsh7th/nvim-compe'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 call plug#end()
+
+autocmd FileType css set omnifunc=csscomplete
+
 
 "Configration
 set encoding=UTF-8
@@ -41,6 +47,11 @@ let g:rainbow_active = 1
 highlight Visual cterm=NONE ctermbg=236 ctermfg=NONE guibg=Grey40
 
 highlight LineNr cterm=none ctermfg=240 guifg=#2b506e guibg=#000000
+
+
+set path+=**
+set wildignore+=*/node_modules/*
+set ignorecase
 set cursorline
 set smarttab
 set number
@@ -49,6 +60,13 @@ set tabstop=2
 set ai "Auto indent
 set si "Smart indent
 set nowrap "No Wrap lines
+set background=dark
+
+" JavaScript
+au BufNewFile,BufRead *.es6 setf javascript
+" TypeScript
+au BufNewFile,BufRead *.tsx setf typescriptreact
+
 " theme
 if exists("&termguicolors") && exists("&winblend")
   syntax enable
@@ -63,65 +81,125 @@ if exists("&termguicolors") && exists("&winblend")
   colorscheme NeoSolarized
 endif
 
-" NerdTree configration and keybinds
-let g:NERDTreeDirArrowExpandable = '►'
-let g:NERDTreeDirArrowCollapsible = '▼'
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-"nnoremap <C-f> :NERDTreeFind<CR>
+
+nnoremap <esc><esc> :noh<return>
+
+
+nnoremap <silent>sf :<C-u>Defx -listed -resume
+      \ -columns=indent:mark:icon:icons:filename:git:size
+      \ -buffer-name=tab`tabpagenr()`
+      \ `expand('%:p:h')` -search=`expand('%:p')`<CR>
+nnoremap <silent>fi :<C-u>Defx -new `expand('%:p:h')` -search=`expand('%:p')`<CR>
+
+autocmd FileType defx call s:defx_my_settings()
+	function! s:defx_my_settings() abort
+	  " Define mappings
+	  nnoremap <silent><buffer><expr> <CR>
+	  \ defx#do_action('open')
+	  nnoremap <silent><buffer><expr> c
+	  \ defx#do_action('copy')
+	  nnoremap <silent><buffer><expr> m
+	  \ defx#do_action('move')
+	  nnoremap <silent><buffer><expr> p
+	  \ defx#do_action('paste')
+	  nnoremap <silent><buffer><expr> l
+	  \ defx#do_action('open')
+	  nnoremap <silent><buffer><expr> E
+	  \ defx#do_action('open', 'vsplit')
+	  nnoremap <silent><buffer><expr> P
+	  \ defx#do_action('open', 'pedit')
+	  nnoremap <silent><buffer><expr> o
+	  \ defx#do_action('open_or_close_tree')
+	  nnoremap <silent><buffer><expr> K
+	  \ defx#do_action('new_directory')
+	  nnoremap <silent><buffer><expr> N
+	  \ defx#do_action('new_file')
+	  nnoremap <silent><buffer><expr> M
+	  \ defx#do_action('new_multiple_files')
+	  nnoremap <silent><buffer><expr> C
+	  \ defx#do_action('toggle_columns',
+	  \                'mark:indent:icon:filename:type:size:time')
+	  nnoremap <silent><buffer><expr> S
+	  \ defx#do_action('toggle_sort', 'time')
+	  nnoremap <silent><buffer><expr> d
+	  \ defx#do_action('remove')
+	  nnoremap <silent><buffer><expr> r
+	  \ defx#do_action('rename')
+	  nnoremap <silent><buffer><expr> !
+	  \ defx#do_action('execute_command')
+	  nnoremap <silent><buffer><expr> x
+	  \ defx#do_action('execute_system')
+	  nnoremap <silent><buffer><expr> yy
+	  \ defx#do_action('yank_path')
+	  nnoremap <silent><buffer><expr> .
+	  \ defx#do_action('toggle_ignored_files')
+	  nnoremap <silent><buffer><expr> ;
+	  \ defx#do_action('repeat')
+	  nnoremap <silent><buffer><expr> h
+	  \ defx#do_action('cd', ['..'])
+	  nnoremap <silent><buffer><expr> ~
+	  \ defx#do_action('cd')
+	  nnoremap <silent><buffer><expr> q
+	  \ defx#do_action('quit')
+	  nnoremap <silent><buffer><expr> <Space>
+	  \ defx#do_action('toggle_select') . 'j'
+	  nnoremap <silent><buffer><expr> *
+	  \ defx#do_action('toggle_select_all')
+	  nnoremap <silent><buffer><expr> j
+	  \ line('.') == line('$') ? 'gg' : 'j'
+	  nnoremap <silent><buffer><expr> k
+	  \ line('.') == 1 ? 'G' : 'k'
+	  nnoremap <silent><buffer><expr> <C-l>
+	  \ defx#do_action('redraw')
+	  nnoremap <silent><buffer><expr> <C-g>
+	  \ defx#do_action('print')
+	  nnoremap <silent><buffer><expr> cd
+	  \ defx#do_action('change_vim_cwd')
+	endfunction
+
+call defx#custom#column('icon', {
+      \ 'directory_icon': '▸',
+      \ 'opened_icon': '▾',
+      \ 'root_icon': ' ',
+      \ })
+call defx#custom#column('git', 'indicators', {
+  \ 'Modified'  : 'M',
+  \ 'Staged'    : '✚',
+  \ 'Untracked' : '✭',
+  \ 'Renamed'   : '➜',
+  \ 'Unmerged'  : '═',
+  \ 'Ignored'   : '☒',
+  \ 'Deleted'   : '✖',
+  \ 'Unknown'   : '?'
+  \ })
+
 
 set statusline=%F\ %m%r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}[L%l/%L,C%03v]
   set statusline+=%=
   set statusline+=%{fugitive#statusline()}
 
-let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
-let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
-let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
-" you can add these colors to your .vimrc to help customizing
-let s:brown = "905532"
-let s:aqua =  "3AFFDB"
-let s:blue = "689FB6"
-let s:darkBlue = "44788E"
-let s:purple = "834F79"
-let s:lightPurple = "834F79"
-let s:red = "AE403F"
-let s:beige = "F5C06F"
-let s:yellow = "F09F17"
-let s:orange = "D4843E"
-let s:darkOrange = "F16529"
-let s:pink = "CB6F6F"
-let s:salmon = "EE6E73"
-let s:green = "8FAA54"
-let s:lightGreen = "31B53E"
-let s:white = "FFFFFF"
-let s:rspec_red = 'FE405F'
-let s:git_orange = 'F54D27'
-
-let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
-let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css files to blue
-
-let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
-let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
-
-let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid error
-let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red " sets the color for files ending with _spec.rb
-
-let g:WebDevIconsDefaultFolderSymbolColor = s:beige " sets the color for folders that did not match any rule
-let g:WebDevIconsDefaultFileSymbolColor = s:blue " sets the color for files that did not match any rule
 let g:completion_trigger_character = ['.', '::']
 let g:completion_confirm_key = "\<C-y>"
 let g:completion_confirm_key = ""
 imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
-                 \ "\<Plug>(completion_confirm_completion)"  : "\<c-e>\<CR>" :  "\<CR>"
+                \ "\<Plug>(completion_confirm_completion)"  : "\<c-e>\<CR>" :  "\<CR>"
 
 
 " lspconfig & lspsaga
 lua << EOF
+
+require("nvim-lsp-installer").setup {{
+    automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
+    ui = {
+        icons = {
+            server_installed = "✓",
+            server_pending = "➜",
+            server_uninstalled = "✗"
+        }
+    }
+}}
+
+
 
 local status, lualine = pcall(require, "lualine")
 lualine.setup {
@@ -174,39 +252,7 @@ telescope.setup{
   }
 }
 
-require'compe'.setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  resolve_timeout = 800;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = {
-    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
-    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-    max_width = 120,
-    min_width = 60,
-    max_height = math.floor(vim.o.lines * 0.3),
-    min_height = 1,
-  };
 
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    vsnip = true;
-    ultisnips = true;
-    luasnip = true;
-  };
-}
 
 require 'nvim-treesitter.configs'.setup {
 	highlight = {
@@ -221,56 +267,67 @@ require 'nvim-treesitter.configs'.setup {
     enable = true,
     disable = {},
 	},
+ensure_installed = {
+    "tsx",
+    "json",
+    "html",
+    "scss",
+		"css",
+  },
 autotag = {
     enable = true,
   },
 	
 }
 
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
+
+
+require("lsp-colors").setup({
+  Error = "#db4b4b",
+  Warning = "#e0af68",
+  Information = "#0db9d7",
+  Hint = "#10B981"
+})
 
 local nvim_lsp = require('lspconfig')
 local configs = require'lspconfig.configs'
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+
+
+--local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 
 local protocol = require'vim.lsp.protocol'
 local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
+	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+	local opts = { noremap=true, silent=true }
+	local map = vim.api.nvim_buf_set_keymap
+	map(0, "n", "gr", "<cmd>Lspsaga rename<cr>", {silent = true, noremap = true})
+	map(0, "n", "gx", "<cmd>Lspsaga code_action<cr>", {silent = true, noremap = true})
+	map(0, "x", "gx", ":<c-u>Lspsaga range_code_action<cr>", {silent = true, noremap = true})
+	map(0, "n", "K",  "<cmd>Lspsaga hover_doc<cr>", {silent = true, noremap = true})
+	map(0, "n", "go", "<cmd>Lspsaga show_line_diagnostics<cr>", {silent = true, noremap = true})
+	map(0, "n", "gj", "<cmd>Lspsaga diagnostic_jump_next<cr>", {silent = true, noremap = true})
+	map(0, "n", "gk", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {silent = true, noremap = true})
+	map(0, "n", "<C-u>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1, '<c-u>')<cr>", {})
+	map(0, "n", "<C-d>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1, '<c-d>')<cr>", {})
 	if client.server_capabilities.documentFormattingProvider then
     vim.api.nvim_command [[augroup Format]]
     vim.api.nvim_command [[autocmd! * <buffer>]]
     vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
     vim.api.nvim_command [[augroup END]]
-  end
-
-
-	require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
-	require 'completion'.on_attach(client, bufnr)
 end
 
-local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
-parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
+
+	--require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
+	--require 'completion'.on_attach(client, bufnr)
+end
 
    protocol.CompletionItemKind = {
     '', -- Text
@@ -304,9 +361,33 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(
   vim.lsp.protocol.make_client_capabilities()
 )
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+
+nvim_lsp.cssmodules_ls.setup({
+     on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { 'css', 'sass', 'scss', 'less' },
+})
+
+
+nvim_lsp.cssls.setup({
+     on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { 'css', 'sass', 'scss', 'less' },
+})
+
+nvim_lsp.tailwindcss.setup({
+     on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { 'html', 'typescriptreact', 'javascriptreact'},
+})
+
+
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
-	filetypes = { "css" ,"html","typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
+	filetypes = {  "html","typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
   capabilities = capabilities
 	}
 
@@ -383,15 +464,122 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
+local cmp = require'cmp'
+local lspkind = require'lspkind'
+cmp.setup({
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true
+      }),
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+    }, {
+      { name = 'buffer' },
+    }),
+    formatting = {
+      format = lspkind.cmp_format({with_text = false, maxwidth = 50})
+    }
+  })
+
+  vim.cmd [[highlight! default link CmpItemKind CmpItemMenuDefault]]
+
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  resolve_timeout = 800;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = {
+    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    max_width = 120,
+    min_width = 60,
+    max_height = math.floor(vim.o.lines * 0.3),
+    min_height = 1,
+  };
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    ultisnips = true;
+    luasnip = true;
+  };
+}
+
+local lspsaga = require 'lspsaga'
+lspsaga.setup { -- defaults ...
+  debug = false,
+  use_saga_diagnostic_sign = true,
+  -- diagnostic sign
+  error_sign = "",
+  warn_sign = "",
+  hint_sign = "",
+  infor_sign = "",
+  diagnostic_header_icon = "   ",
+  -- code action title icon
+  code_action_icon = " ",
+  code_action_prompt = {
+    enable = true,
+    sign = true,
+    sign_priority = 40,
+    virtual_text = true,
+  },
+  finder_definition_icon = "  ",
+  finder_reference_icon = "  ",
+  max_preview_lines = 10,
+  finder_action_keys = {
+    open = "o",
+    vsplit = "s",
+    split = "i",
+    quit = "q",
+    scroll_down = "<C-f>",
+    scroll_up = "<C-b>",
+  },
+  code_action_keys = {
+    quit = "q",
+    exec = "<CR>",
+  },
+  rename_action_keys = {
+    quit = "<C-c>",
+    exec = "<CR>",
+  },
+  definition_preview_icon = "  ",
+  border_style = "round",
+  rename_prompt_prefix = "➤",
+  rename_output_qflist = {
+    enable = false,
+    auto_open_qflist = false,
+  },
+  server_filetype_map = {},
+  diagnostic_prefix_format = "%d. ",
+  diagnostic_message_format = "%m %c",
+  highlight_prefix = false,
+}
+
 EOF
 set completeopt=menuone,noinsert,noselect
-nnoremap <silent> <C-j> <Cmd>Lspsaga diagnostic_jump_next<CR>
-nnoremap <silent>K <Cmd>Lspsaga hover_doc<CR>
-"nnoremap <silent> K <Cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
-inoremap <silent> <C-k> <Cmd>Lspsaga signature_help<CR>
-nnoremap <silent> gh <Cmd>Lspsaga lsp_finder<CR>
-nnoremap <silent> gp <Cmd>Lspsaga preview_definition<CR>
-nnoremap <silent> gr <Cmd>Lspsaga rename<CR>
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
 inoremap <silent><expr> <C-Space> compe#complete()
