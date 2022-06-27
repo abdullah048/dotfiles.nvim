@@ -1,5 +1,7 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
 "add the plugin you want to use here.
+Plug 'sbdchd/neoformat'
+Plug 'dense-analysis/ale'
 Plug 'tami5/lspsaga.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'hrsh7th/nvim-compe'
@@ -21,7 +23,7 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': 'TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'jiangmiao/auto-pairs'
-Plug 'ryanoasis/vim-devicons'   
+Plug 'ryanoasis/vim-devicons'
 Plug 'kristijanhusak/defx-icons'
 Plug 'ap/vim-css-color'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -36,6 +38,20 @@ Plug 'hrsh7th/nvim-cmp'
 call plug#end()
 
 autocmd FileType css set omnifunc=csscomplete
+
+let g:neoformat_try_node_exe = 1
+autocmd BufWritePre *.js Neoformat
+
+
+let g:ale_fixers = {
+\   'javascript': ['prettier'],
+\   'typescript': ['prettier'],
+\   'javascriptreact': ['prettier'],
+\   'typescriptreact': ['prettier'],
+\   'css': ['prettier'],
+\}
+let g:ale_linters_explicit = 1
+let g:ale_fix_on_save = 1
 
 
 "Configration
@@ -276,7 +292,7 @@ ensure_installed = {
 autotag = {
     enable = true,
   },
-	
+
 }
 
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
