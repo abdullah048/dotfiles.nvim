@@ -1,14 +1,13 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
 "add the plugin you want to use here.
-Plug 'sbdchd/neoformat'
-Plug 'dense-analysis/ale'
+Plug 'folke/todo-comments.nvim'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
+Plug 'morhetz/gruvbox'
 Plug 'tami5/lspsaga.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'hrsh7th/nvim-compe'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'L3MON4D3/LuaSnip'
-Plug 'onsails/lspkind-nvim'
-Plug 'folke/lsp-colors.nvim'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
@@ -26,8 +25,6 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'ryanoasis/vim-devicons'
 Plug 'kristijanhusak/defx-icons'
 Plug 'ap/vim-css-color'
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'joshdick/onedark.vim'
 Plug 'iCyMind/NeoSolarized'
 Plug 'tribela/vim-transparent'
 Plug 'frazrepo/vim-rainbow'
@@ -38,21 +35,6 @@ Plug 'hrsh7th/nvim-cmp'
 call plug#end()
 
 autocmd FileType css set omnifunc=csscomplete
-
-let g:neoformat_try_node_exe = 1
-autocmd BufWritePre *.js Neoformat
-
-
-let g:ale_fixers = {
-\   'javascript': ['prettier'],
-\   'typescript': ['prettier'],
-\   'javascriptreact': ['prettier'],
-\   'typescriptreact': ['prettier'],
-\   'css': ['prettier'],
-\}
-let g:ale_linters_explicit = 1
-let g:ale_fix_on_save = 1
-
 
 "Configration
 set encoding=UTF-8
@@ -77,10 +59,6 @@ set si "Smart indent
 set nowrap "No Wrap lines
 set background=dark
 
-" JavaScript
-au BufNewFile,BufRead *.es6 setf javascript
-" TypeScript
-au BufNewFile,BufRead *.tsx setf typescriptreact
 
 " theme
 if exists("&termguicolors") && exists("&winblend")
@@ -94,10 +72,9 @@ if exists("&termguicolors") && exists("&winblend")
   let g:neosolarized_termtrans=1
   runtime ./colors/NeoSolarized.vim
   colorscheme NeoSolarized
+	"colorscheme gruvbox	
 endif
 
-
-nnoremap <esc><esc> :noh<return>
 
 
 nnoremap <silent>sf :<C-u>Defx -listed -resume
@@ -202,7 +179,11 @@ imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
 
 " lspconfig & lspsaga
 lua << EOF
-
+require("todo-comments").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
 require("nvim-lsp-installer").setup {{
     automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
     ui = {
@@ -299,20 +280,9 @@ local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
 
 
-require("lsp-colors").setup({
-  Error = "#db4b4b",
-  Warning = "#e0af68",
-  Information = "#0db9d7",
-  Hint = "#10B981"
-})
 
 local nvim_lsp = require('lspconfig')
 local configs = require'lspconfig.configs'
-
-
-
-
---local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 
 local protocol = require'vim.lsp.protocol'
@@ -339,9 +309,6 @@ local on_attach = function(client, bufnr)
     vim.api.nvim_command [[augroup END]]
 end
 
-
-	--require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
-	--require 'completion'.on_attach(client, bufnr)
 end
 
    protocol.CompletionItemKind = {
@@ -402,7 +369,7 @@ nvim_lsp.tailwindcss.setup({
 
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
-	filetypes = {  "html","typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
+	filetypes = {  "html","typescript", "typescriptreact",  "javascript", "javascriptreact"  },
   capabilities = capabilities
 	}
 
@@ -480,7 +447,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 local cmp = require'cmp'
-local lspkind = require'lspkind'
 cmp.setup({
     snippet = {
       expand = function(args)
@@ -500,12 +466,9 @@ cmp.setup({
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
     }, {
-      { name = 'buffer' },
+      --{ name = 'buffer' },
     }),
-    formatting = {
-      format = lspkind.cmp_format({with_text = false, maxwidth = 50})
-    }
-  })
+     })
 
   vim.cmd [[highlight! default link CmpItemKind CmpItemMenuDefault]]
 
@@ -536,10 +499,6 @@ require'compe'.setup {
     buffer = true;
     calc = true;
     nvim_lsp = true;
-    nvim_lua = true;
-    vsnip = true;
-    ultisnips = true;
-    luasnip = true;
   };
 }
 
