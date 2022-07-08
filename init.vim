@@ -1,5 +1,6 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
 "add the plugin you want to use here.
+Plug 'jparise/vim-graphql'
 Plug 'folke/todo-comments.nvim'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
 Plug 'morhetz/gruvbox'
@@ -35,7 +36,7 @@ Plug 'hrsh7th/nvim-cmp'
 call plug#end()
 
 autocmd FileType css set omnifunc=csscomplete
-
+au BufNewFile,BufRead *.prisma setfiletype graphql
 "Configration
 set encoding=UTF-8
 let g:rainbow_active = 1
@@ -349,15 +350,15 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 nvim_lsp.cssmodules_ls.setup({
      on_attach = on_attach,
-    capabilities = capabilities,
-    filetypes = { 'css', 'sass', 'scss', 'less' },
+     capabilities = capabilities,
+  	 filetypes = { 'css', 'sass', 'scss', 'less' },
 })
 
 
 nvim_lsp.cssls.setup({
-     on_attach = on_attach,
-    capabilities = capabilities,
-    filetypes = { 'css', 'sass', 'scss', 'less' },
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'css', 'sass', 'scss', 'less' },
 })
 
 nvim_lsp.tailwindcss.setup({
@@ -366,6 +367,17 @@ nvim_lsp.tailwindcss.setup({
     filetypes = { 'html', 'typescriptreact', 'javascriptreact'},
 })
 
+nvim_lsp.omnisharp.setup({
+     on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = {"cs"},
+})
+
+nvim_lsp.eslint.setup({
+     on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { 'typescriptreact', 'javascriptreact'},
+})
 
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
@@ -375,7 +387,7 @@ nvim_lsp.tsserver.setup {
 
 nvim_lsp.diagnosticls.setup {
   on_attach = on_attach,
-	filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss', 'pandoc' },
+	filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss', 'pandoc','cs' },
   init_options = {
     linters = {
       eslint = {
