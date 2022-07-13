@@ -1,9 +1,11 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
 "add the plugin you want to use here.
-Plug 'jparise/vim-graphql'
-Plug 'folke/todo-comments.nvim'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
-Plug 'morhetz/gruvbox'
+Plug 'jparise/vim-graphql'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+Plug 'kristijanhusak/defx-git'
+Plug 'folke/todo-comments.nvim'
 Plug 'tami5/lspsaga.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'hrsh7th/nvim-compe'
@@ -35,6 +37,9 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 call plug#end()
 
+
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 autocmd FileType css set omnifunc=csscomplete
 au BufNewFile,BufRead *.prisma setfiletype graphql
 "Configration
@@ -75,7 +80,6 @@ if exists("&termguicolors") && exists("&winblend")
   colorscheme NeoSolarized
 	"colorscheme gruvbox	
 endif
-
 
 
 nnoremap <silent>sf :<C-u>Defx -listed -resume
@@ -197,7 +201,6 @@ require("nvim-lsp-installer").setup {{
 }}
 
 
-
 local status, lualine = pcall(require, "lualine")
 lualine.setup {
   options = {
@@ -281,10 +284,9 @@ local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
 
 
-
+local null_ls = require("null-ls")
 local nvim_lsp = require('lspconfig')
 local configs = require'lspconfig.configs'
-
 
 local protocol = require'vim.lsp.protocol'
 local on_attach = function(client, bufnr)
@@ -364,7 +366,7 @@ nvim_lsp.cssls.setup({
 nvim_lsp.tailwindcss.setup({
      on_attach = on_attach,
     capabilities = capabilities,
-    filetypes = { 'html', 'typescriptreact', 'javascriptreact'},
+    filetypes = { 'html', 'typescriptreact', 'javascript', 'javascriptreact'},
 })
 
 nvim_lsp.omnisharp.setup({
@@ -376,14 +378,25 @@ nvim_lsp.omnisharp.setup({
 nvim_lsp.eslint.setup({
      on_attach = on_attach,
     capabilities = capabilities,
-    filetypes = { 'typescriptreact', 'javascriptreact'},
+    filetypes = { 'typescriptreact', 'javascript', 'typescript','javascriptreact'},
 })
 
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
-	filetypes = {  "html","typescript", "typescriptreact",  "javascript", "javascriptreact"  },
+	filetypes = {  "html","typescript","typescript.tsx", "typescriptreact",  "javascript", "javascriptreact"  },
   capabilities = capabilities
 	}
+
+null_ls.setup({
+sources = {
+	        null_ls.builtins.diagnostics.eslint,
+					null_ls.builtins.code_actions.eslint,
+					null_ls.builtins.formatting.prettier,
+													    
+	},
+    on_attach = on_attach,
+		
+})
 
 nvim_lsp.diagnosticls.setup {
   on_attach = on_attach,
