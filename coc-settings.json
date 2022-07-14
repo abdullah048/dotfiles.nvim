@@ -1,0 +1,52 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "markdown",
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "json",
+    "typescriptreact",
+    "html"
+  ],
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.jsxSingleQuote": true,
+  "prettier.arrowParens": "avoid",
+  "prettier.tabWidth": 2,
+  "prettier.endOfLine": "lf",
+  "tailwindCSS.jsLanguages": [
+    "javascript",
+    "javascriptreact",
+    "reason",
+    "typescriptreact"
+  ],
+  "tailwindCSS.htmlLanguages": [
+    "blade",
+    "edge",
+    "eelixir",
+    "ejs",
+    "elixir",
+    "elm",
+    "erb",
+    "eruby",
+    "haml",
+    "handlebars",
+    "html",
+    "htmldjango",
+    "HTML (EEx)",
+    "HTML (Eex)",
+    "html.twig",
+    "jade",
+    "leaf",
+    "markdown",
+    "njk",
+    "nunjucks",
+    "php",
+    "razor",
+    "slim",
+    "svelte",
+    "twig",
+    "vue"
+  ]
+}

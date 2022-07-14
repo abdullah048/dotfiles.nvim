@@ -4,6 +4,7 @@ Plug 'nvim-lualine/lualine.nvim'
 " If you want to have icons in your statusline choose one of these
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'jparise/vim-graphql'
+Plug 'preservim/nerdcommenter'
 Plug 'kristijanhusak/defx-git'
 Plug 'folke/todo-comments.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -50,6 +51,7 @@ set si "Smart indent
 set nowrap "No Wrap lines
 set background=dark
 
+filetype plugin on
 
 " theme
 if exists("&termguicolors") && exists("&winblend")
@@ -196,8 +198,8 @@ if has('nvim')
 		  inoremap <silent><expr> <c-@> coc#refresh()
 		endif
 
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> gj <Plug>(coc-diagnostic-prev)
+nmap <silent> gk <Plug>(coc-diagnostic-next)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -272,7 +274,7 @@ command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.org
 						" external plugins that
 						" " provide custom statusline: lightline.vim, vim-airline.
 						" set
-"statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 						"" Mappings for CoCList
 						"Show all diagnostics.
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
@@ -313,7 +315,7 @@ require('lualine').setup {
 		},
 	sections = {
 		    lualine_a = {'mode'},
-				    lualine_b = {'branch', 'diff', 'diagnostics'},
+				    lualine_b = {'branch', 'diff'},
 						    lualine_c = {'filename'},
 								    lualine_x = {'encoding', 'fileformat', 'filetype'},
 										    lualine_y = {'progress'},
