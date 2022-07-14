@@ -186,17 +186,13 @@ function! CheckBackspace() abort
 		endfunction
 
 
-if has('nvim')
-	  inoremap <silent><expr> <c-space> coc#refresh()
-	else
-		  inoremap <silent><expr <>c-@> coc#refresh()
-		endif
+
 
 if has('nvim')
-	  inoremap <silent><expr> <c-space> coc#refresh()
-	else
-		  inoremap <silent><expr> <c-@> coc#refresh()
-		endif
+	inoremap <silent><expr> <c-space> coc#refresh()
+else
+	inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
 nmap <silent> gj <Plug>(coc-diagnostic-prev)
 nmap <silent> gk <Plug>(coc-diagnostic-next)
