@@ -1,5 +1,7 @@
 call plug#begin('~/AppData/Local/nvim/plugged')
 "add the plugin you want to use here.
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
 Plug 'jparise/vim-graphql'
 Plug 'jose-elias-alvarez/null-ls.nvim'
@@ -87,6 +89,10 @@ nnoremap <silent>sf :<C-u>Defx -listed -resume
       \ -buffer-name=tab`tabpagenr()`
       \ `expand('%:p:h')` -search=`expand('%:p')`<CR>
 nnoremap <silent>fi :<C-u>Defx -new `expand('%:p:h')` -search=`expand('%:p')`<CR>
+
+nnoremap <silent><tab> :BufferLineCycleNext<CR>
+nnoremap <silent><S-tab> :BufferLineCyclePrev<CR>
+
 
 autocmd FileType defx call s:defx_my_settings()
 	function! s:defx_my_settings() abort
@@ -184,6 +190,9 @@ imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
 
 " lspconfig & lspsaga
 lua << EOF
+
+require("bufferline").setup{}
+
 require("todo-comments").setup {
     -- your configuration comes here
     -- or leave it empty to use the default settings
