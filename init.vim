@@ -256,7 +256,8 @@ local telescope = require('telescope')
 local actions = require('telescope.actions')
 telescope.setup{
   defaults = {
-    mappings = {
+		file_ignore_patterns = { "node_modules" },
+		    mappings = {
     },
   }
 }
