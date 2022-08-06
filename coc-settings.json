@@ -19,7 +19,8 @@
     "javascript",
     "javascriptreact",
     "reason",
-    "typescriptreact"
+    "typescriptreact",
+    "jsx"
   ],
   "tailwindCSS.htmlLanguages": [
     "blade",
@@ -47,6 +48,10 @@
     "slim",
     "svelte",
     "twig",
-    "vue"
+    "vue",
+    "javascript",
+    "typescriptreact",
+    "javascriptreact",
+    "jsx"
   ]
 }

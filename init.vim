@@ -394,7 +394,7 @@ autotag = {
 
 EOF
 nnoremap <silent>[b :BufferLineCycleNext<CR>
-nnoremap <silent>]b :BufferLineCyclePrev<CR>
+nnoremap <silent>[n :BufferLineCyclePrev<CR>
 nnoremap  <silent> ;f <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap  <silent> ;r <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <silent> \\ <cmd>Telescope buffers<cr>
