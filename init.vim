@@ -39,7 +39,6 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 call plug#end()
 
-
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 autocmd FileType css set omnifunc=csscomplete
@@ -278,12 +277,11 @@ require 'nvim-treesitter.configs'.setup {
     disable = {},
 	},
 ensure_installed = {
-    "tsx",
     "json",
     "html",
     "scss",
 		"css",
-  },
+		},
 autotag = {
     enable = true,
   },
@@ -506,6 +504,9 @@ cmp.setup({
      })
 
   vim.cmd [[highlight! default link CmpItemKind CmpItemMenuDefault]]
+
+
+
 
 require'compe'.setup {
   enabled = true;
