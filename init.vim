@@ -24,6 +24,7 @@ Plug 'ap/vim-css-color'
 Plug 'iCyMind/NeoSolarized'
 Plug 'tribela/vim-transparent'
 Plug 'frazrepo/vim-rainbow'
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 call plug#end()
 
 
@@ -310,6 +311,9 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 lua << EOF
+
+require("bufferline").setup{}
+
 require("todo-comments").setup {
     -- your configuration comes here
     -- or leave it empty to use the default settings
@@ -389,6 +393,8 @@ autotag = {
 
 
 EOF
+nnoremap <silent>[b :BufferLineCycleNext<CR>
+nnoremap <silent>]b :BufferLineCyclePrev<CR>
 nnoremap  <silent> ;f <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap  <silent> ;r <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <silent> \\ <cmd>Telescope buffers<cr>
