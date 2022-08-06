@@ -403,7 +403,6 @@ sources = {
 													    
 	},
     on_attach = on_attach,
-		
 })
 
 nvim_lsp.diagnosticls.setup {
