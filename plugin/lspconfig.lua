@@ -5,6 +5,8 @@ if (not status) then return end
 
 local protocol = require('vim.lsp.protocol')
 
+vim.cmd 'au! BufRead,BufNewFile *.astro set ft=astro'
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -65,8 +67,19 @@ nvim_lsp.flow.setup {
 
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
-  filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact" },
-  --cmd = { "typescript-language-server", "--stdio" },
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+  capabilities = capabilities
+}
+
+nvim_lsp.astro.setup {
+  on_attach = on_attach,
+  filetypes = { 'astro' },
+  init_options = {
+  configuration = {},
+  typescript = {
+    serverPath = ""
+  }
+},
   capabilities = capabilities
 }
 
@@ -75,7 +88,7 @@ nvim_lsp.sourcekit.setup {
 }
 
 nvim_lsp.sumneko_lua.setup {
-  on_attach = on_attach,
+ on_attach = on_attach,
   settings = {
     Lua = {
       diagnostics = {
@@ -92,7 +105,12 @@ nvim_lsp.sumneko_lua.setup {
   },
 }
 
-nvim_lsp.tailwindcss.setup {}
+nvim_lsp.tailwindcss.setup {
+  on_attach = on_attach,
+  filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "haml", "handlebars", "hbs", "html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte" },
+  capabilities = capabilities
+}
+
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
