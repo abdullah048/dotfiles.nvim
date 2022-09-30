@@ -8,10 +8,11 @@ vim.cmd [[packadd packer.nvim]]
 
 packer.startup(function(use)
   use 'wbthomason/packer.nvim'
-  use {
-    'svrana/neosolarized.nvim',
-    requires = { 'tjdevries/colorbuddy.nvim' }
-  }
+  use 'Mofiqul/vscode.nvim'
+  -- use {
+  --   'svrana/neosolarized.nvim',
+  --   requires = { 'tjdevries/colorbuddy.nvim' }
+  -- }
   use {"folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim"}
   use {
     'numToStr/Comment.nvim'
