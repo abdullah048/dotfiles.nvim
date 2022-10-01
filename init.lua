@@ -16,4 +16,4 @@ if is_win then
   require('craftzdog.windows')
 end
 
-vim.cmd "colorscheme vscode"
+-- vim.cmd "colorscheme vscode"
