@@ -6,6 +6,10 @@ ts.setup {
     enable = true,
     disable = {},
   },
+  rainbow = {
+    enable = true,
+    extended_mode = false,
+  },
   indent = {
     enable = true,
     disable = {},
